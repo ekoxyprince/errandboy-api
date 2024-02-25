@@ -17,7 +17,7 @@ exports.setUserDetails = catchAsync(async(req,res,next)=>{
    const {email,fullname,password} = req.body
    const hashedPassword = await bcrypt.hash(password,12)
    const createdUser = await User.create({email:email,fullname:fullname,password:hashedPassword,role:'user'})
-   res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{user:createdUser,msg:'User account has been successfully created.'}}})
+   res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{user:createdUser,msg:'Account created successfully.'}}})
 })
 exports.signin = catchAsync(async(req,res,next)=>{
     const errors = validationResult(req)
@@ -27,9 +27,9 @@ exports.signin = catchAsync(async(req,res,next)=>{
     const {email,password} = req.body
     const existingUser = await User.findOne({email:email})
     if(!existingUser){
-    return res.status(400).json({success:false,body:{title:'Authentication Error',status:401,data:{path:'email',value:email,location:'body',msg:'Email address is not associated with any account.'}}}) 
+    return res.status(400).json({success:false,body:{title:'Authentication Error',status:401,data:{path:'email',value:email,location:'body',msg:'No user found.'}}}) 
     }else if(!await bcrypt.compare(password,existingUser['password'])){
-    return res.status(400).json({success:false,body:{title:'Authentication Error',status:401,data:{path:'password',value:password,location:'body',msg:'The password provided is incorrect.'}}})
+    return res.status(400).json({success:false,body:{title:'Authentication Error',status:401,data:{path:'password',value:password,location:'body',msg:'Incorrect Password.'}}})
     }
     const accessToken = jwt.sign({id:existingUser._id},jwt_secret)
     res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:'Signin was successful',user:existingUser,accessToken}}})
@@ -44,8 +44,6 @@ exports.forgotPassword = (req,res,next)=>{
     .then(user=>{
      if(!user){
         return res.status(401).json({success:false,body:{title:'Unauthorized request',status:401,data:{path:'email',location:'body',value:email,msg:'No user found!'}}})
-     }else if(!user.password){
-        return res.status(302).json({success:false,body:{title:'Found Redirect',status:302,data:{path:'password',value:'undefined',msg:'Incomplete signup detected.',userr}}})
      }
      return promisify(crypto.randomBytes)(32)
      .then(buffer=>{
@@ -55,7 +53,7 @@ exports.forgotPassword = (req,res,next)=>{
      })
      .then(updatedUser=>{
         mail(email,updatedUser.fullname,'Reset Link',`${server}/api/v1/auth/reset_password/${updatedUser.resetToken}`)
-        res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:'Reset link has been sent to email',user:updatedUser}}})  
+        res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:'Reset link has been sent',user:updatedUser}}})  
      })
     })
     .catch(error=>{

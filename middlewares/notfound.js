@@ -6,9 +6,9 @@ module.exports = (req,res,next)=>{
         body:{
             status:404,
             data:{
-                msg:'The resources requested for cannot be found on the server',
+                msg:'Resource not found',
                 value:req.originalUrl,
-                path:'endpoint/route'
+                path:'route'
             }
         }
     })  
