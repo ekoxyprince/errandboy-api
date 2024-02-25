@@ -9,10 +9,12 @@ module.exports = (err,req,res,next)=>{
             title:'Internal Server Error',
             status:statusCode,
             data:{
-              path:err.path,
-              value:err.value,
-              stack:errorStack,
-              msg:errorMessage
+              errors:[{
+                path:err.path,
+                value:err.value,
+                stack:errorStack,
+                msg:errorMessage
+              }]
             }
         }
     })
