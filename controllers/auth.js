@@ -27,9 +27,9 @@ exports.signin = catchAsync(async(req,res,next)=>{
     const {email,password} = req.body
     const existingUser = await User.findOne({email:email})
     if(!existingUser){
-    return res.status(400).json({success:false,body:{title:'Authentication Error',status:401,data:{path:'email',value:email,location:'body',msg:'No user found.'}}}) 
+    return res.status(400).json({success:false,body:{title:'Authentication Error',status:401,data:{errors:[{path:'email',value:email,location:'body',msg:'No user found.'}]}}}) 
     }else if(!await bcrypt.compare(password,existingUser['password'])){
-    return res.status(400).json({success:false,body:{title:'Authentication Error',status:401,data:{path:'password',value:password,location:'body',msg:'Incorrect Password.'}}})
+    return res.status(400).json({success:false,body:{title:'Authentication Error',status:401,data:{errors:[{path:'password',value:password,location:'body',msg:'Incorrect Password.'}]}}})
     }
     const accessToken = jwt.sign({id:existingUser._id},jwt_secret)
     res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:'Signin was successful',user:existingUser,accessToken}}})
@@ -65,7 +65,7 @@ exports.resetPassword = (req,res,next)=>{
     User.findOne({resetToken:token,resetTokenExpires:{$gt:Date.now()}})
     .then(user=>{
        if(!user){
-        return res.status(400).json({success:false,body:{title:'Bad Request',status:400,data:{msg:'Invalid token please try again.',path:'token',value:token,location:'params'}}})  
+        return res.status(400).json({success:false,body:{title:'Bad Request',status:400,data:{errors:[{msg:'Invalid token please try again.',path:'token',value:token,location:'params'}]}}})  
        }
        res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:'Request successful.',user:user}}})
     })
@@ -77,7 +77,7 @@ exports.setNewPassword = catchAsync(async(req,res,next)=>{
     const {token,password} = req.body
     const user =  await User.findOne({resetToken:token,resetTokenExpires:{$gt:Date.now()}})
        if(!user){
-        return res.status(400).json({success:false,body:{title:'Bad Request',status:400,data:{msg:'Invalid token please try again.',path:'token',value:token,location:'params'}}})  
+        return res.status(400).json({success:false,body:{title:'Bad Request',status:400,data:{errors:[{msg:'Invalid token please try again.',path:'token',value:token,location:'params'}]}}})  
        }
     const hashedPassword = await bcrypt.hash(password,12)
     user.password = hashedPassword
