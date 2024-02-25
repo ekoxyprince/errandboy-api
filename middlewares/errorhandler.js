@@ -10,10 +10,10 @@ module.exports = (err,req,res,next)=>{
             status:statusCode,
             data:{
               errors:[{
-                path:err.path,
-                value:err.value,
-                stack:errorStack,
-                msg:errorMessage
+                // path:err.path,
+                // value:err.value,
+                // stack:errorStack,
+                // msg:errorMessage
               }]
             }
         }
