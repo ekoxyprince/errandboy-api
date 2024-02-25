@@ -16,7 +16,7 @@ exports.setUserDetails = catchAsync(async(req,res,next)=>{
    }
    const {email,fullname,password} = req.body
    const hashedPassword = await bcrypt.hash(password,12)
-   const createdUser = await User.create({email:email,fullname:fullname,password:hashedPassword})
+   const createdUser = await User.create({email:email,fullname:fullname,password:hashedPassword,role:'user'})
    res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{user:createdUser,msg:'User account has been successfully created.'}}})
 })
 exports.signin = catchAsync(async(req,res,next)=>{
