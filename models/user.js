@@ -22,6 +22,10 @@ const userSchema = new Schema({
    role:{
       type:String,
       required:true
-   }
+   },
+   image:String,
+   city:String,
+   state:String,
+   address:String
 })
 module.exports = model('User',userSchema)

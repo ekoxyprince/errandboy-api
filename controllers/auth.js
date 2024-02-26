@@ -16,7 +16,7 @@ exports.setUserDetails = catchAsync(async(req,res,next)=>{
    }
    const {email,fullname,password} = req.body
    const hashedPassword = await bcrypt.hash(password,12)
-   const createdUser = await User.create({email:email,fullname:fullname,password:hashedPassword,role:'user'})
+   const createdUser = await User.create({email:email,fullname:fullname,password:hashedPassword,role:'user',image:'/static/default.png'})
    res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{user:createdUser,msg:'Account created successfully.'}}})
 })
 exports.signin = catchAsync(async(req,res,next)=>{
@@ -26,7 +26,7 @@ exports.signin = catchAsync(async(req,res,next)=>{
     }
     const {email,password} = req.body
     const existingUser = await User.findOne({email:email})
-    if(!existingUser){
+    if(!existingUser || existingUser.role === 'admin'){
     return res.status(400).json({success:false,body:{title:'Authentication Error',status:401,data:{path:'email',value:email,location:'body',msg:'No user found.'}}}) 
     }else if(!await bcrypt.compare(password,existingUser['password'])){
     return res.status(400).json({success:false,body:{title:'Authentication Error',status:401,data:{path:'password',value:password,location:'body',msg:'Incorrect Password.'}}})

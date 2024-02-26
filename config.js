@@ -14,4 +14,5 @@ module.exports = {
     server:process.env.NODE_ENV ==='development'?
     process.env.LOCAL_SERVER:
     process.env.DEPLOYED_SERVER,
+    client:process.env.CLIENT
 }
