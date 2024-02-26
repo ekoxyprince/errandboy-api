@@ -1,5 +1,6 @@
 
 module.exports = (err,req,res,next)=>{
+    console.log(err)
     const statusCode = err.statusCode || 500
     const errorStack = process.env.NODE_ENV==='development'?err.stack:'Contact the site developer.'
     const errorMessage = process.env.NODE_ENV==='development'?err.message:'Something went wrong.'
