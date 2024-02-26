@@ -23,6 +23,9 @@ exports.getTotalOrders = (req,res,next)=>{
 }
 exports.updateDetails = (req,res,next)=>{
     const {fullname,state,city,address} = req.body
+    console.log("body",req.body)
+    console.log("file",req.file)
+    console.log("files",req.files)
     const user = req.user
     const file = req.file
     user.fullname = fullname || user.fullname
