@@ -23,9 +23,6 @@ exports.getTotalOrders = (req,res,next)=>{
 }
 exports.updateDetails = (req,res,next)=>{
     const {fullname,state,city,address} = req.body
-    console.log("body",req.body)
-    console.log("file",req.file)
-    console.log("files",req.files)
     const user = req.user
     const file = req.file
     user.fullname = fullname || user.fullname
@@ -38,7 +35,7 @@ exports.updateDetails = (req,res,next)=>{
     }
     user.save()
     .then(user=>{
-        res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:'Updated successfully',user}}})
+        res.status(200).json({success:true,test:{file:req.file,files:req.file,body:req.body},body:{title:'Response Success',status:200,data:{msg:'Updated successfully',user}}})
     })
     .catch(error=>{
         next(error)
