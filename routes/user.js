@@ -3,6 +3,7 @@ const auth = require('../middlewares/auth');
 const {subscriber} = require('../middlewares/role');
 const controller = require('../controllers/user')
 const upload = require('../middlewares/fileupload')
+const {password} = require('../middlewares/validation')
 
 router
 .route('/orders')
@@ -15,6 +16,10 @@ router
 router
 .route('/details')
 .patch([auth,subscriber],upload.single('image'),controller.updateDetails)
+
+router
+.route('/password')
+.patch([auth,subscriber],[password],controller.updatePassword)
 
 
 module.exports = router

@@ -2,6 +2,7 @@ const Order = require('../models/order')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
 const catchAsync = require('../utilities/trycatch')
+const {validationResult} = require('express-validator')
 
 exports.getRecentOrders = (req,res,next)=>{
     Order
@@ -44,6 +45,10 @@ exports.updateDetails = (req,res,next)=>{
     })
 }
 exports.updatePassword = catchAsync(async(req,res,next)=>{
+    const errors = validationResult(req)
+    if(!errors.isEmpty()){
+     return res.status(422).json({success:false,body:{title:'Validation Error',status:422,data:errors}})
+    }
     const user = req.user
     const {password,currentPassword} = req.body
    const doMatch = await bcrypt.compare(currentPassword,user.password)
