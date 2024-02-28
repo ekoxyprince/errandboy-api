@@ -70,7 +70,7 @@ exports.postSupport = (req,res,next)=>{
         status:'opened'
     })
     .then(support=>{
-        res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:`support ticked #${support._id} created`,support}}})
+        res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:`support ticked created`,support}}})
     })
     .catch(error=>next(error))
 }
