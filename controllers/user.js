@@ -1,4 +1,5 @@
 const Order = require('../models/order')
+const Support = require('../models/support')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
 const catchAsync = require('../utilities/trycatch')
@@ -60,3 +61,16 @@ exports.updatePassword = catchAsync(async(req,res,next)=>{
    const updatedUser = await user.save()
    res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:'Updated successfully',user:updatedUser}}})
 })
+exports.postSupport = (req,res,next)=>{
+    const {subject,description} = req.body
+    Support.create({
+        user:req.user._id,
+        subject:subject,
+        description:description,
+        status:'opened'
+    })
+    .then(support=>{
+        res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:`support ticked #${support._id} created`,support}}})
+    })
+    .catch(error=>next(error))
+}

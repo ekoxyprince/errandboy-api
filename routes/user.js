@@ -21,5 +21,9 @@ router
 .route('/password')
 .patch([auth,subscriber],[password],controller.updatePassword)
 
+router
+.route('/support')
+.post([auth,subscriber],controller.postSupport)
+
 
 module.exports = router
