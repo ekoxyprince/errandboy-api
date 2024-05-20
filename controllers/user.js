@@ -9,7 +9,11 @@ const paymentInstance = new PaymentService()
 
 exports.getRecentOrders = (req,res,next)=>{
     Order
-    .find({user:req.user._id}).populate('user').limit(10).sort({_id:-1})
+    .find({userDetails:req.user._id})
+    .populate('userDetails')
+    .populate('paymentDetails')
+    .limit(10)
+    .sort({_id:-1})
     .then(orders=>{
      res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:'orders fetched successfully',orders}}})
     })
@@ -19,7 +23,10 @@ exports.getRecentOrders = (req,res,next)=>{
 }
 exports.getTotalOrders = (req,res,next)=>{
     Order
-    .find({user:req.user._id}).populate('user').sort({_id:-1})
+    .find({userDetails:req.user._id})
+    .populate('userDetails')
+    .populate('paymentDetails')
+    .sort({_id:-1})
     .then(orders=>{
         res.status(200).json({success:true,body:{title:'Response Success',status:200,data:{msg:'orders fetched successfully',orders}}})  
     })
@@ -76,20 +83,53 @@ exports.postSupport = (req,res,next)=>{
     })
     .catch(error=>next(error))
 }
+
+exports.createOrder = catchAsync(async(req,res)=>{
+   const body = req.body
+   const user = req.user
+   const order = await Order.create({
+    status:'processing',
+    dispatchStatus:'active',
+    amount:body.amount,
+    userDetails:user._id,
+    trackingDetails:{
+        startLocation:{
+         address:body.startLocation.address,
+         cords:body.startLocation.cords
+        },
+        destination:{
+            address:body.destination.address,
+            cords:body.destination.cords
+        }
+    }
+   })
+   res.status(201).json({success:true,body:{title:'Payment Started',status:201,data:{msg:"Order created",order}}})
+})
+exports.requestService = catchAsync(async(req,res)=>{
+    const body = req.body
+    const user = req.user
+    const order = await Order.findById(body.orderId)
+    if(order.dispatchStatus != "active") return res.status(400).json({success:false,body:{status:400,title:'Bad Request',data:{msg:'Order not available',value:id,path:'id',location:'body'}}})
+    order.dispatchStatus = 'progress'
+    order.riderDetails = user._id
+    order.trackingDetails.dispatchLocation = {
+        address:body.address,
+        cords:body.cords
+    }
+    await order.save()
+    res.status(201).json({success:true,body:{title:'Request successful',status:200,data:{msg:"Order assigned to you."}}})
+})
 exports.startPayment = catchAsync(async(req,res,next)=>{
     const {id} = req.body
-    // const order = await Order.findById(id)
-    // if(!order){
-    //     return res.status(400).json({success:false,body:{status:400,title:'Bad Request',data:{msg:'No order found!',value:id,path:'id',location:'body'}}})
-    // }
+    const order = await Order.findById(id)
+    if(!order){
+        return res.status(400).json({success:false,body:{status:400,title:'Bad Request',data:{msg:'No order found!',value:id,path:'id',location:'body'}}})
+    }
      const response = await paymentInstance.startPayment({
         email:req.user.email,
         full_name:req.user.fullname,
-        // amount:order.total,
-        amount:400,
-        orderId:"83hbdebdv6"
-        // orderId:id
-
+        amount:order.amount,
+        orderId:id
      })
      res.status(201).json({success:true,body:{title:'Payment Started',status:201,data:response}})
 })
@@ -98,9 +138,11 @@ exports.createPayment = catchAsync(async(req,res,next)=>{
     const newStatus = response.status === 'success'?'completed':'pending'
     const order = await Order.findOne({_id:response.orderId})
     order.status = newStatus
+    order.paymentDetails = response._id
     const newOrder = await order.save()
     res.status(201).json({success:true,body:{title:'Payment Created',status:201,data:{payment:response,order:newOrder}}})
 })
+
 exports.getPayment = catchAsync(async(req,res,next)=>{
     const errors = validationResult(req)
     if(!errors.isEmpty()){

@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const auth = require('../middlewares/auth');
-const {subscriber} = require('../middlewares/role');
+const {subscriber,dispatch} = require('../middlewares/role');
 const controller = require('../controllers/user')
 const upload = require('../middlewares/fileupload')
 const {password} = require('../middlewares/validation')
@@ -24,7 +24,10 @@ router
 router
 .route('/support')
 .post([auth,subscriber],controller.postSupport)
-
+router
+.route("/order")
+.get([auth,subscriber])
+.post([auth,subscriber],controller.createOrder)
 router
 .route('/payment')
 .get([auth],controller.createPayment)
@@ -32,6 +35,9 @@ router
 router
 .route('/payment_details')
 .get([auth],controller.getPayment)
+router
+.route("/dispatch_request")
+.post([auth,dispatch],controller.requestService)
 
 
 module.exports = router

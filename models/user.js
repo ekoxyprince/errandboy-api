@@ -26,6 +26,10 @@ const userSchema = new Schema({
    image:String,
    city:String,
    state:String,
-   address:String
+   address:String,
+   phone:Number,
+   accountNumber:Number,
+   accountName:String,
+   bankName:String
 })
 module.exports = model('User',userSchema)

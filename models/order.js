@@ -1,22 +1,9 @@
 const {model,Schema} = require('mongoose')
 
 const orderSchema = new Schema({
-    fromAddress:{
-        type:String,
-        required:true
-    },
-    toAddress:{
-        type:String,
-        required:true
-    },
-    createdAt:{
-        type:Date,
-        required:true
-    },
-    user:{
-        type:Schema.Types.ObjectId,
-        ref:'User',
-        required:true
+    paymentDetails:{
+     type:Schema.Types.ObjectId,
+     ref:'Payment',
     },
     status:{
         type:String,
@@ -25,6 +12,49 @@ const orderSchema = new Schema({
     dispatchStatus:{
         type:String,
         required:true
+    },
+    trackingDetails:{
+     startLocation:{
+        address:String,
+        cords:{
+            latitude:Number,
+            longitude:Number
+        }
+     },
+     destination:{
+        address:String,
+        cords:{
+            latitude:Number,
+            longitude:Number
+        },
+     },
+     dispatchLocation:{
+        address:String,
+        cords:{
+            latitude:Number,
+            longitude:Number
+        },
+     }
+    },
+    amount:Number,
+    createdAt:{
+        type:Date,
+        required:true,
+        default:Date.now()
+    },
+    updatedAt:{
+        type:Date,
+        required:true ,
+        default:Date.now() 
+    },
+    userDetails:{
+        type:Schema.Types.ObjectId,
+        ref:'User',
+        required:true
+    },
+    riderDetails:{
+        type:Schema.Types.ObjectId,
+        ref:'User',
     }
 })
 
