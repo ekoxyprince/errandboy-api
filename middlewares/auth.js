@@ -6,6 +6,7 @@ const User = require('../models/user')
 module.exports = async(req,res,next)=>{
     try {
         const token = req.headers['authorization']&&req.headers['authorization'].split(" ")[1]
+        if(!token || typeof token == undefined)          return res.status(401).json({success:false,body:{title:'Authentication Error',status:401,data:{msg:'Invalid authentication creditials',path:'jsonwebtoken',value:token,location:'headers'}}})
         const decoded = await promisify(jwt.verify)(token,jwt_secret)
         const user = await User.findById(decoded.id)
         if(!user){
