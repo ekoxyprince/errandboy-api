@@ -4,6 +4,8 @@ const fs = require('fs')
 const bcrypt = require('bcryptjs')
 const catchAsync = require('../utilities/trycatch')
 const {validationResult} = require('express-validator')
+const PaymentService = require('../services/payment')
+const paymentInstance = new PaymentService()
 
 exports.getRecentOrders = (req,res,next)=>{
     Order
@@ -74,3 +76,36 @@ exports.postSupport = (req,res,next)=>{
     })
     .catch(error=>next(error))
 }
+exports.startPayment = catchAsync(async(req,res,next)=>{
+    const {id} = req.body
+    // const order = await Order.findById(id)
+    // if(!order){
+    //     return res.status(400).json({success:false,body:{status:400,title:'Bad Request',data:{msg:'No order found!',value:id,path:'id',location:'body'}}})
+    // }
+     const response = await paymentInstance.startPayment({
+        email:req.user.email,
+        full_name:req.user.fullname,
+        // amount:order.total,
+        amount:400,
+        orderId:"83hbdebdv6"
+        // orderId:id
+
+     })
+     res.status(201).json({success:true,body:{title:'Payment Started',status:201,data:response}})
+})
+exports.createPayment = catchAsync(async(req,res,next)=>{
+    const response = await paymentInstance.createPayment(req.query)
+    const newStatus = response.status === 'success'?'completed':'pending'
+    const order = await Order.findOne({_id:response.orderId})
+    order.status = newStatus
+    const newOrder = await order.save()
+    res.status(201).json({success:true,body:{title:'Payment Created',status:201,data:{payment:response,order:newOrder}}})
+})
+exports.getPayment = catchAsync(async(req,res,next)=>{
+    const errors = validationResult(req)
+    if(!errors.isEmpty()){
+        return res.status(422).json({success:false,body:{status:422,title:'Validation Error',data:errors}});
+    }
+    const response = await paymentInstance.paymentReceipt(req.query)
+    res.status(200).json({success:true,body:{title:'Payment Details',status:200,data:response}})
+})

@@ -25,5 +25,13 @@ router
 .route('/support')
 .post([auth,subscriber],controller.postSupport)
 
+router
+.route('/payment')
+.get([auth],controller.createPayment)
+.post([auth],controller.startPayment)
+router
+.route('/payment_details')
+.get([auth],controller.getPayment)
+
 
 module.exports = router
