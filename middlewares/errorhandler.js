@@ -1,8 +1,8 @@
 
 module.exports = (err,req,res,next)=>{
     const statusCode = err.statusCode || 500
-    const errorStack = process.env.NODE_ENV==='development'?err.stack:'Contact the site developer.'
-    const errorMessage = process.env.NODE_ENV==='development'?err.message:'Something went wrong.'
+    const errorStack = process.env.NODE_ENV==='production'?err.stack:'Contact the site developer.'
+    const errorMessage = process.env.NODE_ENV==='production'?err.message:'Something went wrong.'
     res.status(statusCode).json({
         success:false,
         body:{
