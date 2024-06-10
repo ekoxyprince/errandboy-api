@@ -1,35 +1,43 @@
-const {model,Schema} = require('mongoose')
+const { model, Schema } = require("mongoose");
 
 const userSchema = new Schema({
-   email:{
-      type:String,
-      required:true,
-      unique:true
-   },
-   fullname:String,
-   password:{
-      type:String,
-      required:true
-   },
-   resetToken:String,
-   resetTokenExpires:Date,
-   otpToken:String,
-   otpTokenExpires:Date,
-   emailVerified:{
-      default:false,
-      type:Boolean
-   },
-   role:{
-      type:String,
-      required:true
-   },
-   image:String,
-   city:String,
-   state:String,
-   address:String,
-   phone:Number,
-   accountNumber:Number,
-   accountName:String,
-   bankName:String
-})
-module.exports = model('User',userSchema)
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  fullname: String,
+  password: {
+    type: String,
+    required: true,
+  },
+  resetToken: String,
+  resetTokenExpires: Date,
+  otpToken: String,
+  otpTokenExpires: Date,
+  emailVerified: {
+    default: false,
+    type: Boolean,
+  },
+  role: {
+    type: String,
+    required: true,
+  },
+  image: String,
+  city: String,
+  state: String,
+  address: String,
+  phone: {
+    type: Number,
+    unique: true,
+  },
+  accountNumber: Number,
+  accountName: String,
+  bankName: String,
+  riderStatus: {
+    type: String,
+    default: "unverified",
+    enum: ["verified", "unverified", "pending"],
+  },
+});
+module.exports = model("User", userSchema);
