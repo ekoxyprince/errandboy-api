@@ -278,10 +278,7 @@ exports.upgradeAccount = catchAsync(async (req, res, next) => {
       "visit the head office"
     );
   } catch (err) {
-    res.status(500).json({
-      status: "fail",
-      message: "There was an error trying to send the email please try again",
-    });
+ throw new Error(err)
   }
 
   const admin = await User.findOne({ role: "admin" });

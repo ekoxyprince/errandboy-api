@@ -26,18 +26,22 @@ router
   .post([auth, subscriber], controller.createOrder);
 router
   .route("/payment")
-  .get([auth], controller.createPayment)
+  .get(controller.createPayment)
   .post([auth], controller.startPayment);
-router.route("/payment_details").get([auth], controller.getPayment);
+router
+.route("/payment_details")
+.get([auth], controller.getPayment);
 router
   .route("/dispatch_request")
   .post([auth, dispatch], controller.requestService);
 
 ///////
-router.route("/new_order").get([auth, dispatch], controller.checkNewOrder);
+router
+.route("/new_order")
+.get([auth, dispatch], controller.checkNewOrder);
 router
   .route("/mark_delivery/:id")
-  .patch([auth, dispatch, subscriber], controller.markOrderByRider);
+  .patch([auth, dispatch], controller.markOrderByRider);
 router
   .route("/uncompleted_orders")
   .get([auth, subscriber], controller.getAllUndeliveredOrder);
