@@ -5,7 +5,9 @@ const controller = require("../controllers/user");
 const upload = require("../middlewares/fileupload");
 const { password } = require("../middlewares/validation");
 
-router.route("/orders").get([auth, subscriber], controller.getTotalOrders);
+router
+.route("/orders")
+.get([auth, subscriber], controller.getTotalOrders);
 
 router
   .route("/recent_orders")
@@ -22,23 +24,21 @@ router
 router.route("/support").post([auth, subscriber], controller.postSupport);
 router
   .route("/order")
-  .get([auth, subscriber])
   .post([auth, subscriber], controller.createOrder);
+router
+ .route("/order/:id")
+ .get([auth,subscriber],controller.getOrderById)
 router
   .route("/payment")
   .get(controller.createPayment)
   .post([auth], controller.startPayment);
-router
-.route("/payment_details")
-.get([auth], controller.getPayment);
+router.route("/payment_details").get([auth], controller.getPayment);
 router
   .route("/dispatch_request")
   .post([auth, dispatch], controller.requestService);
 
 ///////
-router
-.route("/new_order")
-.get([auth, dispatch], controller.checkNewOrder);
+router.route("/new_order").get([auth, dispatch], controller.checkNewOrder);
 router
   .route("/mark_delivery/:id")
   .patch([auth, dispatch], controller.markOrderByRider);
