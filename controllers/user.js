@@ -393,16 +393,31 @@ exports.getOrderById = catchAsync(async(req,res)=>{
   const {id} = req.params
   const order = await Order
   .findOne({_id:id})
-  .populate("userDetails","fullname,email,phone")
-  .populate("paymentDetails","status,amount")
-  .populate("riderDetails","fullname,email,phone")
-  res.status(201).json({
+  .populate("userDetails","fullname email phone")
+  .populate("paymentDetails","status amount")
+  .populate("riderDetails","fullname email phone")
+  res.status(200).json({
     success: true,
     body: {
       title: "Response Success",
       status: 200,
       data: { msg: "order fetched successfully", order },
     }, 
+  })
+
+})
+exports.getAllOrders = catchAsync(async(req,res)=>{
+  const orders  = await Order.find()
+  .populate("userDetails","fullname email phone")
+  .populate("paymentDetails","status amount")
+  .populate("riderDetails","fullname email phone")
+  res.status(200).json({
+    success:true,
+    body:{
+      title:"Response successful",
+      status:200,
+      data:{msg:"Orders fetched",orders}
+    }
   })
 
 })

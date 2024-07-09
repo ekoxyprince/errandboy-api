@@ -48,5 +48,8 @@ router
 router
   .route("/upgrade_account")
   .patch([auth, subscriber], controller.upgradeAccount);
+  router
+  .route("/deliveries")
+  .get(controller.getAllOrders)
 
 module.exports = router;
