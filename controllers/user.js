@@ -407,7 +407,12 @@ exports.getOrderById = catchAsync(async(req,res)=>{
 
 })
 exports.getAllOrders = catchAsync(async(req,res)=>{
-  const orders  = await Order.find()
+  const {type} = req.query
+  const query = {}
+  if(type && type != "all"){
+   query['dispatchStatus'] = type =="pending"?"progress":"delivered"
+  }
+  const orders  = await Order.find(query)
   .populate("userDetails","fullname email phone")
   .populate("paymentDetails","status amount")
   .populate("riderDetails","fullname email phone")
