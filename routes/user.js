@@ -52,6 +52,7 @@ router
   .route("/deliveries")
   .get(controller.getAllOrders)
   router
-  .route("/notification")
+  .route("/notifications")
+  .get([auth,subscriber],controller.getNotification)
 
 module.exports = router;
