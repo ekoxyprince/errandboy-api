@@ -39,5 +39,16 @@ const userSchema = new Schema({
     default: "unverified",
     enum: ["verified", "unverified", "pending"],
   },
+  notifications:[
+    {
+      title:String,
+      message:String,
+      createdAt:String,
+      isSeen:{
+        type:Boolean,
+        default:false
+      }
+    }
+  ]
 });
 module.exports = model("User", userSchema);

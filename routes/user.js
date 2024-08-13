@@ -51,5 +51,7 @@ router
   router
   .route("/deliveries")
   .get(controller.getAllOrders)
+  router
+  .route("/notification")
 
 module.exports = router;

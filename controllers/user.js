@@ -270,13 +270,13 @@ exports.upgradeAccount = catchAsync(async (req, res, next) => {
   const updatedUser = await user.save();
 
   try {
-    await email(
-      user.email,
-      user.fullname,
-      user.phone,
-      "Steps to follow",
-      "visit the head office"
-    );
+    // await email(
+    //   user.email,
+    //   user.fullname,
+    //   user.phone,
+    //   "Steps to follow",
+    //   "visit the head office"
+    // );
   } catch (err) {
  throw new Error(err)
   }
@@ -422,6 +422,17 @@ exports.getAllOrders = catchAsync(async(req,res)=>{
       title:"Response successful",
       status:200,
       data:{msg:"Orders fetched",orders}
+    }
+  })
+
+})
+exports.getNotification = catchAsync(async(req,res)=>{
+  res.status(200).json({
+    success:true,
+    body:{
+      title:"Response successful",
+      status:200,
+      data:{msg:"Notifications fetched",notifications:req.user.notifications}
     }
   })
 
