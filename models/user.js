@@ -43,7 +43,10 @@ const userSchema = new Schema({
     {
       title:String,
       message:String,
-      createdAt:String,
+      createdAt:{
+        type:Date,
+        default:new Date(Date.now())
+      },
       isSeen:{
         type:Boolean,
         default:false
