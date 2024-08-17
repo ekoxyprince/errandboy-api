@@ -281,23 +281,21 @@ exports.upgradeAccount = catchAsync(async (req, res, next) => {
  throw new Error(err)
   }
 
-  const admin = await User.findOne({ role: "admin" });
-  if (!admin) {
-    return res.statu(400).json({
-      success: false,
-      title: "No admin found",
-      data: { msg: "NO admin found" },
-    });
-  }
-
-
-  await Notification.create({
-    title: "New rider application",
-    user: admin._id,
-    content: `A new rider application with the following details
-    ${user.fullname}
-    ${user.phone}`,
-  });
+  // const admin = await User.findOne({ role: "admin" });
+  // if (!admin) {
+  //   return res.status(400).json({
+  //     success: false,
+  //     title: "No admin found",
+  //     data: { msg: "NO admin found" },
+  //   });
+  // }
+  // await Notification.create({
+  //   title: "New rider application",
+  //   user: admin._id,
+  //   content: `A new rider application with the following details
+  //   ${user.fullname}
+  //   ${user.phone}`,
+  // });
   const notification = {
     title:"Account upgrade request",
     message:"Your request to upgrade your account to a rider account is currently being reviewed."
@@ -308,8 +306,8 @@ exports.upgradeAccount = catchAsync(async (req, res, next) => {
     success: true,
     title: "Successful account upgrade",
     data: {
-      user: updatedUser,
-      msg: "User applied for account upgrade",
+      user: null,
+      msg: "Application in progress",
     },
   });
 });
