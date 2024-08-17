@@ -290,6 +290,7 @@ exports.upgradeAccount = catchAsync(async (req, res, next) => {
     });
   }
 
+
   await Notification.create({
     title: "New rider application",
     user: admin._id,
@@ -297,6 +298,12 @@ exports.upgradeAccount = catchAsync(async (req, res, next) => {
     ${user.fullname}
     ${user.phone}`,
   });
+  const notification = {
+    title:"Account upgrade request",
+    message:"Your request to upgrade your account to a rider account is currently being reviewed."
+  }
+  req.user.notifications.push(notification)
+  await req.user.save()
   res.status(200).json({
     success: true,
     title: "Successful account upgrade",
@@ -435,5 +442,4 @@ exports.getNotification = catchAsync(async(req,res)=>{
       data:{msg:"Notifications fetched",notifications:req.user.notifications}
     }
   })
-
 })
