@@ -31,8 +31,8 @@ exports.getRecentOrders = (req, res, next) => {
 };
 exports.getTotalOrders = (req, res, next) => {
   Order.find({ userDetails: req.user._id })
-    .populate("userDetails","fullname,email,phone")
-    .populate("paymentDetails","status,amount")
+    .populate("userDetails","fullname email phone")
+    .populate("paymentDetails","status amount")
     .sort({ _id: -1 })
     .then((orders) => {
       res.status(200).json({
@@ -413,7 +413,7 @@ exports.getOrderById = catchAsync(async(req,res)=>{
 })
 exports.getAllOrders = catchAsync(async(req,res)=>{
   const {type} = req.query
-  const query = {}
+  const query = {status:"completed"}
   if(type && type != "all"){
    query['dispatchStatus'] = type
   }
@@ -426,7 +426,7 @@ exports.getAllOrders = catchAsync(async(req,res)=>{
     body:{
       title:"Response successful",
       status:200,
-      data:{msg:"Orders fetched",orders}
+      data:{msg:"Orders fetched",orders:req.user.role == "rider"?orders:[]}
     }
   })
 

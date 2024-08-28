@@ -50,7 +50,7 @@ router
   .patch([auth, subscriber], controller.upgradeAccount);
   router
   .route("/deliveries")
-  .get(controller.getAllOrders)
+  .get([auth,subscriber],controller.getAllOrders)
   router
   .route("/notifications")
   .get([auth,subscriber],controller.getNotification)
