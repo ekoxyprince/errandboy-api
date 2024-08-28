@@ -426,7 +426,7 @@ exports.getAllOrders = catchAsync(async(req,res)=>{
     body:{
       title:"Response successful",
       status:200,
-      data:{msg:"Orders fetched",orders:req.user.role == "rider"?orders:[]}
+      data:{msg:"Orders fetched",orders:req.user.role == "dispatch"?orders:[]}
     }
   })
 
